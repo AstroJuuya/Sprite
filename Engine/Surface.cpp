@@ -14,25 +14,75 @@ Surface::Surface( const std::string& filename )
 	BITMAPINFOHEADER bmInfoHeader;
 	file.read( reinterpret_cast<char*>(&bmInfoHeader),sizeof( bmInfoHeader ) );
 
-	assert( bmInfoHeader.biBitCount == 24 );
-	assert( bmInfoHeader.biCompression == BI_RGB );
-
 	width = bmInfoHeader.biWidth;
-	height = bmInfoHeader.biHeight;
+	height = abs(bmInfoHeader.biHeight);
 
-	pPixels = new Color[width*height];
+	pPixels = new Color[width*abs(height)];
 
 	file.seekg( bmFileHeader.bfOffBits );
-	const int padding = (4 - (width * 3) % 4) % 4;
 
-	for( int y = height - 1; y >= 0; y-- )
-	{
-		for( int x = 0; x < width; x++ )
-		{
-			PutPixel( x,y,Color( file.get(),file.get(),file.get() ) );
+	if (bmInfoHeader.biHeight > 0) {
+		if (bmInfoHeader.biBitCount == 24) {
+			assert(bmInfoHeader.biBitCount == 24);
+			assert(bmInfoHeader.biCompression == BI_RGB);
+
+			const int padding = (4 - (width * 3) % 4) % 4;
+
+			for (int y = height - 1; y >= 0; y--)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					PutPixel(x, y, Color(file.get(), file.get(), file.get()));
+				}
+				file.seekg(padding, std::ios::cur);
+			}
 		}
-		file.seekg( padding,std::ios::cur );
+		else if (bmInfoHeader.biBitCount == 32) {
+			assert(bmInfoHeader.biBitCount == 32);
+			assert(bmInfoHeader.biCompression == BI_RGB);
+
+			for (int y = height - 1; y >= 0; y--)
+			{
+				for (int x = 0; x < width; x++)
+				{
+
+					PutPixel(x, y, Color(file.get(), file.get(), file.get(), file.get()));
+				}
+			}
+		}
 	}
+	else if (bmInfoHeader.biHeight < 0) {
+		if (bmInfoHeader.biBitCount == 24) {
+			assert(bmInfoHeader.biBitCount == 24);
+			assert(bmInfoHeader.biCompression == BI_RGB);
+
+			const int padding = (4 - (width * 3) % 4) % 4;
+
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					PutPixel(x, y, Color(file.get(), file.get(), file.get()));
+				}
+				file.seekg(padding, std::ios::cur);
+			}
+		}
+		else if (bmInfoHeader.biBitCount == 32) {
+			assert(bmInfoHeader.biBitCount == 32);
+			assert(bmInfoHeader.biCompression == BI_RGB);
+
+			for (int y = 0; y < height; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+
+					PutPixel(x, y, Color(file.get(), file.get(), file.get(), file.get()));
+				}
+			}
+		}
+	}
+	assert(bmInfoHeader.biBitCount == 32 || bmInfoHeader.biBitCount == 24);
+	assert(bmInfoHeader.biCompression == BI_RGB);
 }
 
 Surface::Surface( int width,int height )
