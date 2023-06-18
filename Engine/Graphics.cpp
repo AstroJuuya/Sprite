@@ -240,6 +240,83 @@ Graphics::Graphics( HWNDKey& key )
 		_aligned_malloc( sizeof( Color ) * Graphics::ScreenWidth * Graphics::ScreenHeight,16u ) );
 }
 
+void Graphics::DrawCircle( int x,int y,int radius,Color c )
+{
+	const int rad_sq = radius * radius;
+	for( int y_loop = y - radius; y_loop < y + radius + 1; y_loop++ )
+	{		
+		for( int x_loop = x - radius; x_loop < x + radius + 1; x_loop++ )
+		{
+			const int x_diff = x - x_loop;
+			const int y_diff = y - y_loop;
+			if( x_diff * x_diff + y_diff * y_diff <= rad_sq )
+			{
+				PutPixel( x_loop,y_loop,c );
+			}
+		}
+	}
+}
+
+void Graphics::DrawSpriteNonChroma(const int x, const int y, const Surface& surf)
+{
+	DrawSpriteNonChroma(x, y, surf.GetRect(), surf);
+}
+
+void Graphics::DrawSpriteNonChroma(const int x, const int y, const RectI& subregion, const Surface& surf)
+{
+	DrawSpriteNonChroma(x, y, GetScreenRect(), subregion, surf);
+}
+
+void Graphics::DrawSpriteNonChroma(const int x, const int y, const RectI clipping_region, const RectI subregion, const Surface& surf)
+{
+	DrawSprite(x, y, clipping_region, subregion, surf);
+}
+
+void Graphics::DrawSprite(const int x, const int y, const Surface& surf, const Color& chroma)
+{
+	DrawSprite(x, y, surf.GetRect(), surf, chroma);
+}
+
+void Graphics::DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma)
+{
+	DrawSprite(x, y, GetScreenRect(), subregion, surf, chroma);
+}
+
+void Graphics::DrawSprite(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma)
+{
+	assert(subregion.left >= 0);
+	assert(subregion.right <= surf.GetWidth());
+	assert(subregion.top >= 0);
+	assert(subregion.bottom <= surf.GetHeight());
+
+	if (x < clipping_region.left) {
+		subregion.left += clipping_region.left - x;
+		x += clipping_region.left - x;
+	}
+	if (x + subregion.GetWidth() > clipping_region.right) {
+		subregion.right = subregion.left + clipping_region.right - x;
+	}
+	if (y < clipping_region.top) {
+		subregion.top += clipping_region.top - y;
+		y += clipping_region.top - y;
+	}
+	if (y + subregion.GetHeight() > clipping_region.bottom) {
+		subregion.bottom = subregion.top + clipping_region.bottom - y;
+	}
+	for (int sx = 0; sx < subregion.GetWidth(); sx++) {
+		for (int sy = 0; sy < subregion.GetHeight(); sy++) {
+			if (surf.GetPixel(subregion.left + sx, subregion.top + sy) != chroma) {
+				PutPixel(x + sx, y + sy, surf.GetPixel(subregion.left + sx, subregion.top + sy));
+			}
+		}
+	}
+}
+
+RectI Graphics::GetScreenRect() const
+{
+	return RectI(0, ScreenWidth, 0, ScreenHeight);
+}
+
 Graphics::~Graphics()
 {
 	// free sysbuffer memory (aligned free)
@@ -316,19 +393,25 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
-void Graphics::DrawSprite( int x,int y,const Surface& s )
+void Graphics::DrawRect( int x0,int y0,int x1,int y1,Color c )
 {
-	const int width = s.GetWidth();
-	const int height = s.GetHeight();
-	for( int sy = 0; sy < height; sy++ )
+	if( x0 > x1 )
 	{
-		for( int sx = 0; sx < width; sx++ )
+		std::swap( x0,x1 );
+	}
+	if( y0 > y1 )
+{
+		std::swap( y0,y1 );
+	}
+
+	for( int y = y0; y < y1; ++y )
+	{
+		for( int x = x0; x < x1; ++x )
 		{
-			PutPixel( x + sx,y + sy,s.GetPixel( sx,sy ) );
+			PutPixel( x,y,c );
 		}
 	}
 }
-
 
 //////////////////////////////////////////////////
 //           Graphics Exception

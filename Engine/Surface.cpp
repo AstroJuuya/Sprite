@@ -1,146 +1,100 @@
 #include "Surface.h"
-#include "ChiliWin.h"
-#include <cassert>
+#include <string>
+#include <wingdi.h>
 #include <fstream>
+#include <assert.h>
 
-Surface::Surface( const std::string& filename )
+Surface::Surface(std::string filename)
 {
-	std::ifstream file( filename,std::ios::binary );
-	assert( file );
+	std::ifstream file(filename, std::iostream::binary);
+	assert(file);
 
 	BITMAPFILEHEADER bmFileHeader;
-	file.read( reinterpret_cast<char*>(&bmFileHeader),sizeof( bmFileHeader ) );
+	file.read(reinterpret_cast<char*>(&bmFileHeader), sizeof(bmFileHeader));
 
 	BITMAPINFOHEADER bmInfoHeader;
-	file.read( reinterpret_cast<char*>(&bmInfoHeader),sizeof( bmInfoHeader ) );
+	file.read(reinterpret_cast<char*>(&bmInfoHeader), sizeof(bmInfoHeader));
 
 	width = bmInfoHeader.biWidth;
 	height = abs(bmInfoHeader.biHeight);
+	pPixels = new Color[width * height];
 
-	pPixels = new Color[width*abs(height)];
-
-	file.seekg( bmFileHeader.bfOffBits );
-
-	if (bmInfoHeader.biHeight > 0) {
-		if (bmInfoHeader.biBitCount == 24) {
-			assert(bmInfoHeader.biBitCount == 24);
-			assert(bmInfoHeader.biCompression == BI_RGB);
-
-			const int padding = (4 - (width * 3) % 4) % 4;
-
-			for (int y = height - 1; y >= 0; y--)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					PutPixel(x, y, Color(file.get(), file.get(), file.get()));
-				}
-				file.seekg(padding, std::ios::cur);
-			}
-		}
-		else if (bmInfoHeader.biBitCount == 32) {
-			assert(bmInfoHeader.biBitCount == 32);
-			assert(bmInfoHeader.biCompression == BI_RGB);
-
-			for (int y = height - 1; y >= 0; y--)
-			{
-				for (int x = 0; x < width; x++)
-				{
-
-					PutPixel(x, y, Color(file.get(), file.get(), file.get(), file.get()));
-				}
-			}
-		}
-	}
-	else if (bmInfoHeader.biHeight < 0) {
-		if (bmInfoHeader.biBitCount == 24) {
-			assert(bmInfoHeader.biBitCount == 24);
-			assert(bmInfoHeader.biCompression == BI_RGB);
-
-			const int padding = (4 - (width * 3) % 4) % 4;
-
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-					PutPixel(x, y, Color(file.get(), file.get(), file.get()));
-				}
-				file.seekg(padding, std::ios::cur);
-			}
-		}
-		else if (bmInfoHeader.biBitCount == 32) {
-			assert(bmInfoHeader.biBitCount == 32);
-			assert(bmInfoHeader.biCompression == BI_RGB);
-
-			for (int y = 0; y < height; y++)
-			{
-				for (int x = 0; x < width; x++)
-				{
-
-					PutPixel(x, y, Color(file.get(), file.get(), file.get(), file.get()));
-				}
-			}
-		}
-	}
 	assert(bmInfoHeader.biBitCount == 32 || bmInfoHeader.biBitCount == 24);
 	assert(bmInfoHeader.biCompression == BI_RGB);
-}
 
-Surface::Surface( int width,int height )
-	:
-	width( width ),
-	height( height ),
-	pPixels( new Color[width*height] )
-{
-}
+	int heightStart = height - 1;
+	int heightEnd = 0;
+	int fdir = -1;
+	if (bmInfoHeader.biHeight < 0) {
+		heightStart = 0;
+		heightEnd = height - 1;
+		fdir = 1;
+	}
 
-Surface::Surface( const Surface& rhs )
-	:
-	Surface( rhs.width,rhs.height )
-{
-	const int nPixels = width * height;
-	for( int i = 0; i < nPixels; i++ )
-	{
-		pPixels[i] = rhs.pPixels[i];
+	file.seekg(bmFileHeader.bfOffBits);
+	int padding = bmInfoHeader.biBitCount == 24 ? (4 - (width * 3) % 4) % 4 : 0;
+	for (int y = heightStart; y != heightEnd; y += fdir) {
+		for (int x = 0; x < width; x++) {
+			PutPixel(x, y, Color(file.get(), file.get(), file.get()));
+			file.seekg(padding, std::ios::cur);
+		}
 	}
 }
 
-Surface::~Surface()
+Surface::Surface(const Surface& in_surf)
+	:
+	width(in_surf.width),
+	height(in_surf.height)
 {
-	delete [] pPixels;
-	pPixels = nullptr;
+	pPixels = new Color[width * height];
+	for (int i = 0; i < width * height; i++) {
+		pPixels[i] = in_surf.pPixels[i];
+	}
 }
 
-Surface& Surface::operator=( const Surface& rhs )
+Surface::Surface(const int in_width, const int in_height)
+	:
+	width(in_width),
+	height(in_height)
+{
+	pPixels = new Color[width * height]{ Colors::Magenta, Colors::Green };
+}
+
+Surface::Surface(const int in_width, const int in_height, Color& col)
+	:
+	width(in_width),
+	height(in_height)
+{
+	pPixels = new Color[width * height]{ col };
+}
+
+Surface& Surface::operator=(const Surface& rhs)
 {
 	width = rhs.width;
 	height = rhs.height;
 
-	delete [] pPixels;
-	pPixels = new Color[width*height];
+	delete[] pPixels;
+	pPixels = new Color[width * height];
 
-	const int nPixels = width * height;
-	for( int i = 0; i < nPixels; i++ )
-	{
+	for (int i = 0; i < width * height; i++) {
 		pPixels[i] = rhs.pPixels[i];
 	}
 	return *this;
 }
 
-void Surface::PutPixel( int x,int y,Color c )
+Surface::~Surface()
 {
-	assert( x >= 0 );
-	assert( x < width );
-	assert( y >= 0 );
-	assert( y < height );
+	delete[] pPixels;
+	pPixels = nullptr;
+}
+
+void Surface::PutPixel(const int x, const int y, const Color& c)
+{
 	pPixels[y * width + x] = c;
 }
 
-Color Surface::GetPixel( int x,int y ) const
+Color Surface::GetPixel(const int x, const int y) const
 {
-	assert( x >= 0 );
-	assert( x < width );
-	assert( y >= 0 );
-	assert( y < height );
 	return pPixels[y * width + x];
 }
 
@@ -152,4 +106,14 @@ int Surface::GetWidth() const
 int Surface::GetHeight() const
 {
 	return height;
+}
+
+int Surface::GetSize() const
+{
+	return width * height;
+}
+
+RectI Surface::GetRect() const
+{
+	return RectI(0, width, 0, height);
 }

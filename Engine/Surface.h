@@ -1,22 +1,29 @@
 #pragma once
 
 #include "Colors.h"
+#include "ChiliWin.h"
+#include "RectI.h"
 #include <string>
 
-class Surface
-{
+class Surface {
 public:
-	Surface( const std::string& filename );
-	Surface( int width,int height );
-	Surface( const Surface& );
+	Surface() = delete;
+	Surface(std::string filename);
+	Surface(const Surface& in_surf);
+	Surface(const int in_width, const int in_height);
+	Surface(const int in_width, const int in_height, Color& col);
+	Surface& operator=(const Surface& rhs);
 	~Surface();
-	Surface& operator=( const Surface& );
-	void PutPixel( int x,int y,Color c );
-	Color GetPixel( int x,int y ) const;
+
+	void PutPixel(const int x, const int y, const Color& c);
+	Color GetPixel(const int x, const int y) const;
 	int GetWidth() const;
 	int GetHeight() const;
+	int GetSize() const;
+	RectI GetRect() const;
+
 private:
+	int width = 0;
+	int height = 0;
 	Color* pPixels = nullptr;
-	int width;
-	int height;
 };

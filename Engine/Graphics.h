@@ -25,6 +25,7 @@
 #include "ChiliException.h"
 #include "Colors.h"
 #include "Surface.h"
+#include "RectI.h"
 
 class Graphics
 {
@@ -58,7 +59,19 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
-	void DrawSprite( int x,int y,const Surface& s );
+	void DrawRect( int x0,int y0,int x1,int y1,Color c );
+	void DrawRectDim( int x0,int y0,int width,int height,Color c )
+	{
+		DrawRect( x0,y0,x0 + width,y0 + height,c );
+	}
+	void DrawCircle( int x,int y,int radius,Color c );
+	void DrawSpriteNonChroma(const int x, const int y, const Surface& surf);
+	void DrawSpriteNonChroma(const int x, const int y, const RectI& subregion, const Surface& surf);
+	void DrawSpriteNonChroma(const int x, const int y, const RectI clipping_region, RectI subregion, const Surface& surf);
+	void DrawSprite(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta);
+	void DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
+	void DrawSprite(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
+	RectI GetScreenRect() const;
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;
