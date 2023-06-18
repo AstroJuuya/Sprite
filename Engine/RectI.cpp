@@ -15,9 +15,21 @@ RectI::RectI( const Vei2& topLeft,const Vei2 & bottomRight )
 {
 }
 
-RectI::RectI( const Vei2& topLeft,int width,int height )
+RectI::RectI( const Vei2& topLeft,float width,float height )
 	:
 	RectI( topLeft,topLeft + Vei2( float(width), float(height)))
+{
+}
+
+RectI::RectI(const Vec2& topLeft, const Vec2& bottomRight)
+	:
+	RectI(topLeft.x, bottomRight.x, topLeft.y, bottomRight.y)
+{
+}
+
+RectI::RectI(const Vec2& topLeft, int width, int height)
+	:
+	RectI(topLeft, Vec2(width, height))
 {
 }
 
@@ -38,10 +50,16 @@ bool RectI::Contains( const Vei2& point ) const
 	return point.x >= left && point.x < right && point.y >= top && point.y < bottom;
 }
 
-RectI RectI::FromCenter( const Vei2 & center,int halfWidth,int halfHeight )
+RectI RectI::FromCenter( const Vei2 & center,float halfWidth,float halfHeight )
 {
 	const Vei2 half( halfWidth,halfHeight );
 	return RectI( center - half,center + half );
+}
+
+RectI RectI::FromCenter(const Vec2& center, int halfWidth, int halfHeight)
+{
+	const Vec2 half(halfWidth, halfHeight);
+	return RectI(center - half, center + half);
 }
 
 RectI RectI::GetExpanded( int offset ) const
@@ -49,9 +67,9 @@ RectI RectI::GetExpanded( int offset ) const
 	return RectI( left - offset,right + offset,top - offset,bottom + offset );
 }
 
-Vei2 RectI::GetCenter() const
+Vec2 RectI::GetCenter() const
 {
-	return Vei2(float((left + right) / 2), float((top + bottom) / 2) );
+	return Vec2(int((left + right) / 2), int((top + bottom) / 2) );
 }
 
 int RectI::GetWidth() const

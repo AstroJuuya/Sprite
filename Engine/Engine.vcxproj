@@ -238,10 +238,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Chili.ico" />
-    <Image Include="dib.bmp" />
-    <Image Include="dib32.bmp" />
-    <Image Include="dibr.bmp" />
-    <Image Include="rgb.bmp" />
+    <Image Include="Sprites\link90x90.bmp" />
+    <Image Include="Sprites\marle32x48.bmp" />
+    <Image Include="Sprites\pilgrim108x140.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
