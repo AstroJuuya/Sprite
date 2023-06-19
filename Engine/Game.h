@@ -24,6 +24,7 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "Surface.h"
+#include "Character.h"
 
 class Game
 {
@@ -44,4 +45,8 @@ private:
 	/********************************/
 	/*  User Variables              */
 	/********************************/
+	const Surface link_sprite = { "Sprites\\link90x90.bmp" };
+	const Vec2 link_spritesize = { 90, 90 };
+	const Color link_chroma = Colors::Magenta;
+	Character link;
 };
