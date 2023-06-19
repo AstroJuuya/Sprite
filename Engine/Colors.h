@@ -59,6 +59,38 @@ public:
 	{
 		return !(dword == col.dword);
 	}
+	Color operator +(const Color& rhs) const
+	{
+		return Color(unsigned char((float)GetR() + (float)rhs.GetR()), unsigned char((float)GetG() + (float)rhs.GetG()), unsigned char((float)GetB() + (float)rhs.GetB()));
+	}
+	Color& operator +=(const Color& rhs)
+	{
+		return *this = *this + rhs;
+	}
+	Color operator -(const Color& rhs) const
+	{
+		return Color(unsigned char((float)GetR() - (float)rhs.GetR()), unsigned char((float)GetG() - (float)rhs.GetG()), unsigned char((float)GetB() - (float)rhs.GetB()));
+	}
+	Color& operator -=(const Color& rhs)
+	{
+		return *this = *this - rhs;
+	}
+	Color operator /(const float rhs) const
+	{
+		return Color(unsigned char((float)GetR() / rhs), unsigned char((float)GetG() / rhs), unsigned char((float)GetB() / rhs));
+	}
+	Color& operator /=(const float rhs)
+	{
+		return *this = *this / rhs;
+	}
+	Color operator *(const float rhs) const
+	{
+		return Color(unsigned char((float)GetR() * rhs), unsigned char((float)GetG() * rhs), unsigned char((float)GetB() * rhs));
+	}
+	Color& operator *=(const float rhs)
+	{
+		return *this = *this * rhs;
+	}
 	constexpr unsigned char GetX() const
 	{
 		return dword >> 24u;
