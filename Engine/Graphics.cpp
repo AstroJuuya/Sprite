@@ -277,19 +277,9 @@ void Graphics::DrawSprite(const int x, const int y, const Surface& surf, const C
 	DrawSprite(x, y, surf.GetRect(), surf, chroma);
 }
 
-void Graphics::DrawSprite(const Vec2& pos, const Surface& surf, const Color& chroma)
-{
-	DrawSprite(pos.x, pos.y, surf.GetRect(), surf, chroma);
-}
-
 void Graphics::DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma)
 {
 	DrawSprite(x, y, GetScreenRect(), subregion, surf, chroma);
-}
-
-void Graphics::DrawSprite(const Vec2& pos, const RectI& subregion, const Surface& surf, const Color& chroma)
-{
-	DrawSprite(pos.x, pos.y, GetScreenRect(), subregion, surf, chroma);
 }
 
 void Graphics::DrawSprite(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma)
@@ -320,11 +310,6 @@ void Graphics::DrawSprite(int x, int y, const RectI& clipping_region, RectI subr
 			}
 		}
 	}
-}
-
-void Graphics::DrawSprite(const Vec2& pos, const RectI& clipping_region, const RectI& subregion, const Surface& surf, const Color& chroma)
-{
-	DrawSprite(pos.x, pos.y, clipping_region, subregion, surf, chroma);
 }
 
 RectI Graphics::GetScreenRect() const

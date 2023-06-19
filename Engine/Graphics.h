@@ -69,11 +69,8 @@ public:
 	void DrawSpriteNonChroma(const int x, const int y, const RectI& subregion, const Surface& surf);
 	void DrawSpriteNonChroma(const int x, const int y, const RectI clipping_region, RectI subregion, const Surface& surf);
 	void DrawSprite(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta);
-	void DrawSprite(const Vec2& pos, const Surface& surf, const Color& chroma = Colors::Magenta);
 	void DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
-	void DrawSprite(const Vec2& pos, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
 	void DrawSprite(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
-	void DrawSprite(const Vec2& pos, const RectI& clipping_region, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
 	RectI GetScreenRect() const;
 	~Graphics();
 private:
