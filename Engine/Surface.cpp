@@ -36,8 +36,8 @@ Surface::Surface(std::string filename)
 	for (int y = heightStart; y != heightEnd; y += fdir) {
 		for (int x = 0; x < width; x++) {
 			PutPixel(x, y, Color(file.get(), file.get(), file.get()));
-			file.seekg(padding, std::ios::cur);
 		}
+		file.seekg(padding, std::ios::cur);
 	}
 }
 
