@@ -71,6 +71,9 @@ public:
 	void DrawSprite(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta);
 	void DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
 	void DrawSprite(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
+	void DrawSpriteSubstitute(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
+	void DrawSpriteSubstitute(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
+	void DrawSpriteSubstitute(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
 	RectI GetScreenRect() const;
 	~Graphics();
 private:

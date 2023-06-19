@@ -312,6 +312,46 @@ void Graphics::DrawSprite(int x, int y, const RectI& clipping_region, RectI subr
 	}
 }
 
+void Graphics::DrawSpriteSubstitute(const int x, const int y, const Surface& surf, const Color& chroma, const Color& substitute)
+{
+	DrawSpriteSubstitute(x, y, surf.GetRect(), surf, chroma, substitute);
+}
+
+void Graphics::DrawSpriteSubstitute(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma, const Color& substitute)
+{
+	DrawSpriteSubstitute(x, y, GetScreenRect(), subregion, surf, chroma, substitute);
+}
+
+void Graphics::DrawSpriteSubstitute(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma, const Color& substitute)
+{
+	assert(subregion.left >= 0);
+	assert(subregion.right <= surf.GetWidth());
+	assert(subregion.top >= 0);
+	assert(subregion.bottom <= surf.GetHeight());
+
+	if (x < clipping_region.left) {
+		subregion.left += clipping_region.left - x;
+		x += clipping_region.left - x;
+	}
+	if (x + subregion.GetWidth() > clipping_region.right) {
+		subregion.right = subregion.left + clipping_region.right - x;
+	}
+	if (y < clipping_region.top) {
+		subregion.top += clipping_region.top - y;
+		y += clipping_region.top - y;
+	}
+	if (y + subregion.GetHeight() > clipping_region.bottom) {
+		subregion.bottom = subregion.top + clipping_region.bottom - y;
+	}
+	for (int sx = 0; sx < subregion.GetWidth(); sx++) {
+		for (int sy = 0; sy < subregion.GetHeight(); sy++) {
+			if (surf.GetPixel(subregion.left + sx, subregion.top + sy) != chroma) {
+				PutPixel(x + sx, y + sy, substitute);
+			}
+		}
+	}
+}
+
 RectI Graphics::GetScreenRect() const
 {
 	return RectI(0, ScreenWidth, 0, ScreenHeight);
