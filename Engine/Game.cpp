@@ -45,14 +45,21 @@ void Game::Go()
 void Game::UpdateModel()
 {
 	Vec2 movement_delta = { 0,0 };
-	if (wnd.kbd.KeyIsPressed(VK_LEFT))
+	if (wnd.kbd.KeyIsPressed(VK_LEFT)) {
 		movement_delta.x = -1;
-	else if (wnd.kbd.KeyIsPressed(VK_RIGHT))
+	}
+	else if (wnd.kbd.KeyIsPressed(VK_RIGHT)) {
 		movement_delta.x = 1;
-	if (wnd.kbd.KeyIsPressed(VK_UP))
+	}
+	if (wnd.kbd.KeyIsPressed(VK_UP)) {
 		movement_delta.y = -1;
-	else if (wnd.kbd.KeyIsPressed(VK_DOWN))
+	}
+	else if (wnd.kbd.KeyIsPressed(VK_DOWN)) {
 		movement_delta.y = 1;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_SPACE)) {
+		link.DamageTick();
+	}
 	link.Move(movement_delta);
 }
 

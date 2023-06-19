@@ -22,6 +22,10 @@ public:
 	Character(const Animation& spritesheet, const Vei2& position);
 	void Animate(Graphics& gfx);
 	void Move(const Vec2& delta);
+	void DamageTick();
+
+private:
+
 
 private:
 	Animation animation;
@@ -29,6 +33,11 @@ private:
 	Vei2 position = { 0, 0 };
 	Vei2 movement_direction = { 0, 0 };
 	static constexpr int speed = 250;
+
+	bool damage_tick = false;
+	static constexpr Color damage_color = Colors::Red;
+	static constexpr float damage_duration = 0.06f;
+	float damage_cycle = 0.0f;
 
 	State animation_state = Standing_Down;
 	int current_sprite = 0;
