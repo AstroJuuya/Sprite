@@ -154,6 +154,7 @@
     <ClInclude Include="Sound.h" />
     <ClInclude Include="SoundEffect.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Vec2.h" />
     <ClInclude Include="Vei2.h" />
   </ItemGroup>
@@ -172,6 +173,7 @@
     <ClCompile Include="RectI.cpp" />
     <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Vec2.cpp" />
     <ClCompile Include="Vei2.cpp" />
   </ItemGroup>
@@ -242,6 +244,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Chili.ico" />
+    <Image Include="Fonts\Consolas13x24.bmp" />
+    <Image Include="Fonts\Fixedsys16x28.bmp" />
     <Image Include="Sprites\link90x90.bmp" />
     <Image Include="Sprites\marle32x48.bmp" />
     <Image Include="Sprites\pilgrim108x140.bmp" />

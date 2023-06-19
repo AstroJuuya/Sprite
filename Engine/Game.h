@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "Surface.h"
 #include "Character.h"
+#include "Text.h"
 
 class Game
 {
@@ -48,5 +49,6 @@ private:
 	const Surface link_sprite = { "Sprites\\link90x90.bmp" };
 	const Vec2 link_spritesize = { 90, 90 };
 	const Color link_chroma = Colors::Magenta;
+	const Text message = { "Fonts\\Fixedsys16x28.bmp", 16, 28, Colors::White };
 	Character link;
 };

@@ -66,4 +66,5 @@ void Game::UpdateModel()
 void Game::ComposeFrame()
 {
 	link.Animate(gfx);
+	message.Draw(gfx, "This is some\nbullshit!11!11!!", 100, 100);
 }
