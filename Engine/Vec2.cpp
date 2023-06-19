@@ -10,7 +10,9 @@ Vec2::Vec2( int x_in,int y_in )
 
 Vec2& Vec2::operator=(const Vec2& rhs)
 {
-	return Vec2(rhs.x, rhs.y);
+	x = rhs.x;
+	y = rhs.y;
+	return *this;
 }
 
 Vec2 Vec2::operator+( const Vec2& rhs ) const
@@ -28,7 +30,7 @@ Vec2 Vec2::operator*(int rhs) const
 	return Vec2(x * rhs, y * rhs);
 }
 
-Vec2 Vec2::operator*=(int rhs)
+Vec2& Vec2::operator*=(int rhs)
 {
 	return *this = *this * rhs;
 }

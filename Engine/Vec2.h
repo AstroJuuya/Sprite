@@ -11,7 +11,7 @@ public:
 	Vec2 operator+( const Vec2& rhs ) const;
 	Vec2& operator+=( const Vec2& rhs );
 	Vec2 operator*( int rhs ) const;
-	Vec2 operator*=( int rhs );
+	Vec2& operator*=( int rhs );
 	Vei2 operator*( float rhs ) const;
 	Vei2 operator/( int rhs ) const;
 	Vei2 operator/( float rhs ) const;
