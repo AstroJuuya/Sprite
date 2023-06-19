@@ -59,6 +59,8 @@ public:
 		PutPixel( x,y,{ unsigned char( r ),unsigned char( g ),unsigned char( b ) } );
 	}
 	void PutPixel( int x,int y,Color c );
+	Color GetPixel(const int x, const int y) const;
+	Color GetPixel(const Vec2& coord) const;
 	void DrawRect( int x0,int y0,int x1,int y1,Color c );
 	void DrawRectDim( int x0,int y0,int width,int height,Color c )
 	{
@@ -74,7 +76,9 @@ public:
 	void DrawSpriteSubstitute(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
 	void DrawSpriteSubstitute(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
 	void DrawSpriteSubstitute(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
-	RectI GetScreenRect() const;
+	void DrawSpriteTransparent(const int x, const int y, const Surface& surf, const unsigned int alpha = 1.0f, const Color& chroma = Colors::Magenta);
+	void DrawSpriteTransparent(const int x, const int y, const RectI& subregion, const Surface& surf, const unsigned int alpha = 1.0f, const Color& chroma = Colors::Magenta);
+	void DrawSpriteTransparent(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const unsigned int alpha = 1.0f, const Color& chroma = Colors::Magenta);	RectI GetScreenRect() const;
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

@@ -33,13 +33,25 @@ void Character::Animate(Graphics& gfx)
 			damage_color);
 		return;
 	}
-	gfx.DrawSprite(
-		(int)position.x,
-		(int)position.y,
-		gfx.GetScreenRect(),
-		animation.GetSpriteRect(sprite_at),
-		animation.spritesheet,
-		animation.chroma);
+	if (ghostified) {
+		gfx.DrawSpriteTransparent(
+			(int)position.x,
+			(int)position.y,
+			gfx.GetScreenRect(),
+			animation.GetSpriteRect(sprite_at),
+			animation.spritesheet,
+			ghostified_alpha,
+			animation.chroma);
+	}
+	else {
+		gfx.DrawSprite(
+			(int)position.x,
+			(int)position.y,
+			gfx.GetScreenRect(),
+			animation.GetSpriteRect(sprite_at),
+			animation.spritesheet,
+			animation.chroma);
+	}
 }
 
 void Character::Move(const Vec2& delta)
@@ -98,4 +110,14 @@ void Character::Move(const Vec2& delta)
 void Character::DamageTick()
 {
 	damage_tick = true;
+}
+
+void Character::Ghostify()
+{
+	if (!ghostified) {
+		ghostified = true;
+	}
+	else if (ghostified) {
+		ghostified = false;
+	}
 }

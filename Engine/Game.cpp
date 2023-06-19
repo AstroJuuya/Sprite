@@ -57,14 +57,23 @@ void Game::UpdateModel()
 	else if (wnd.kbd.KeyIsPressed(VK_DOWN)) {
 		movement_delta.y = 1;
 	}
-	if (wnd.kbd.KeyIsPressed(VK_SPACE)) {
+	if (wnd.kbd.KeyIsPressed(VK_SPACE) && !key_is_pressed) {
 		link.DamageTick();
+		key_is_pressed = true;
+	}
+	if (wnd.kbd.KeyIsPressed(VK_TAB) && !key_is_pressed) {
+		link.Ghostify();
+		key_is_pressed = true;
+	}
+	if (!wnd.kbd.KeyIsPressed(VK_SPACE) && !wnd.kbd.KeyIsPressed(VK_TAB)) {
+		key_is_pressed = false;
 	}
 	link.Move(movement_delta);
 }
 
 void Game::ComposeFrame()
 {
-	link.Animate(gfx);
+	gfx.DrawSprite(100, 100, marle_sprite);
 	message.Draw(gfx, "This is some\nbullshit!11!11!!", 100, 100);
+	link.Animate(gfx);
 }

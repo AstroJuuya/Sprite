@@ -23,6 +23,7 @@ public:
 	void Animate(Graphics& gfx);
 	void Move(const Vec2& delta);
 	void DamageTick();
+	void Ghostify();
 
 private:
 
@@ -33,6 +34,9 @@ private:
 	Vei2 position = { 0, 0 };
 	Vei2 movement_direction = { 0, 0 };
 	static constexpr int speed = 250;
+
+	bool ghostified = false;
+	static constexpr int ghostified_alpha = 50;
 
 	bool damage_tick = false;
 	static constexpr Color damage_color = Colors::Red;

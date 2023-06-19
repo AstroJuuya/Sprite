@@ -352,6 +352,53 @@ void Graphics::DrawSpriteSubstitute(int x, int y, const RectI& clipping_region, 
 	}
 }
 
+void Graphics::DrawSpriteTransparent(const int x, const int y, const Surface& surf, const unsigned int alpha, const Color& chroma)
+{
+	DrawSpriteTransparent(x, y, surf.GetRect(), surf, alpha, chroma);
+}
+
+void Graphics::DrawSpriteTransparent(const int x, const int y, const RectI& subregion, const Surface& surf, const unsigned int alpha, const Color& chroma)
+{
+	DrawSpriteTransparent(x, y, GetScreenRect(), subregion, surf, alpha, chroma);
+}
+
+void Graphics::DrawSpriteTransparent(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const unsigned int alpha, const Color& chroma)
+{
+	assert(subregion.left >= 0);
+	assert(subregion.right <= surf.GetWidth());
+	assert(subregion.top >= 0);
+	assert(subregion.bottom <= surf.GetHeight());
+	assert(alpha <= 100);
+
+	if (x < clipping_region.left) {
+		subregion.left += clipping_region.left - x;
+		x += clipping_region.left - x;
+	}
+	if (x + subregion.GetWidth() > clipping_region.right) {
+		subregion.right = subregion.left + clipping_region.right - x;
+	}
+	if (y < clipping_region.top) {
+		subregion.top += clipping_region.top - y;
+		y += clipping_region.top - y;
+	}
+	if (y + subregion.GetHeight() > clipping_region.bottom) {
+		subregion.bottom = subregion.top + clipping_region.bottom - y;
+	}
+	for (int sx = 0; sx < subregion.GetWidth(); sx++) {
+		for (int sy = 0; sy < subregion.GetHeight(); sy++) {
+			Color pixel_to_draw = surf.GetPixel(subregion.left + sx, subregion.top + sy);
+			if (pixel_to_draw != chroma) {
+				pixel_to_draw *= (float)alpha / 100.0f;
+				
+				Color drawn_pixel = GetPixel(x + sx, y + sy);
+				drawn_pixel *= 1.0f - (float)alpha / 100.0f;
+				pixel_to_draw += drawn_pixel;
+				PutPixel(x + sx, y + sy, pixel_to_draw);
+			}
+		}
+	}
+}
+
 RectI Graphics::GetScreenRect() const
 {
 	return RectI(0, ScreenWidth, 0, ScreenHeight);
@@ -431,6 +478,16 @@ void Graphics::PutPixel( int x,int y,Color c )
 	assert( y >= 0 );
 	assert( y < int( Graphics::ScreenHeight ) );
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
+}
+
+Color Graphics::GetPixel(const int x, const int y) const
+{
+	return pSysBuffer[Graphics::ScreenWidth * y + x];
+}
+
+Color Graphics::GetPixel(const Vec2& coord) const
+{
+	return GetPixel(coord.x, coord.y);
 }
 
 void Graphics::DrawRect( int x0,int y0,int x1,int y1,Color c )
