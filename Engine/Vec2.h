@@ -13,6 +13,13 @@ public:
 	{
 	}
 
+	template <typename S> Vec2_(const Vec2_<S>& src)
+		:
+		x((T)src.x),
+		y((T)src.y)
+	{
+	}
+
 	Vec2_& operator=(const Vec2_<T>& rhs)
 	{
 		x = rhs.x;
@@ -58,11 +65,6 @@ public:
 	Vec2_& operator-=(const Vec2_<T>& rhs)
 	{
 		return *this = *this - rhs;
-	}
-
-	operator Vec2_<float>() const
-	{
-		return { float(x), float(y) };
 	}
 
 	T GetLength() const
