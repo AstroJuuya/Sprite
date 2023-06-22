@@ -1,27 +1,99 @@
 #pragma once
 
-#include "Vei2.h"
+#include <cmath>
 
-class Vec2
+template <typename T> class Vec2_
 {
 public:
-	Vec2() = default;
-	Vec2(int x_in, int y_in );
-	Vec2& operator=(const Vec2& rhs);
-	Vec2 operator+( const Vec2& rhs ) const;
-	Vec2& operator+=( const Vec2& rhs );
-	Vec2 operator*( int rhs ) const;
-	Vec2& operator*=( int rhs );
-	Vei2 operator*( float rhs ) const;
-	Vei2 operator/( int rhs ) const;
-	Vei2 operator/( float rhs ) const;
-	Vec2 operator-( const Vec2& rhs ) const;
-	Vec2& operator-=( const Vec2& rhs );
-	operator Vei2() const;
-	float GetLength() const;
-	float GetLengthSq() const;
-	Vei2 GetNormalized() const;
+	Vec2_() = default;
+	Vec2_(T x_in, T y_in)
+		:
+		x(x_in),
+		y(y_in)
+	{
+	}
+
+	Vec2_& operator=(const Vec2_<T>& rhs)
+	{
+		x = rhs.x;
+		y = rhs.y;
+		return *this;
+	}
+
+	Vec2_ operator+(const Vec2_<T>& rhs) const
+	{
+		return Vec2_<T>(x + rhs.x, y + rhs.y);
+	}
+
+	Vec2_& operator+=(const Vec2_<T>& rhs)
+	{
+		return *this = *this + rhs;
+	}
+
+	Vec2_ operator*(T rhs) const
+	{
+		return Vec2_<T>(x * rhs, y * rhs);
+	}
+
+	Vec2_& operator*=(T rhs)
+	{
+		return *this = *this * rhs;
+	}
+
+	Vec2_ operator/(T rhs) const
+	{
+		return Vec2_<T>(T(x) / T(rhs), T(y) / T(rhs));
+	}
+
+	Vec2_ operator/=(T rhs) const
+	{
+		return *this = T(x) / rhs, T(y) / rhs;
+	}
+
+	Vec2_ operator-(const Vec2_<T>& rhs) const
+	{
+		return Vec2_<T>(x - rhs.x, y - rhs.y);
+	}
+
+	Vec2_& operator-=(const Vec2_<T>& rhs)
+	{
+		return *this = *this - rhs;
+	}
+
+	operator Vec2_<float>() const
+	{
+		return { float(x), float(y) };
+	}
+
+	T GetLength() const
+	{
+		return (T)std::sqrt(GetLengthSq());
+	}
+
+	T GetLengthSq() const
+	{
+		return T(x * x + y * y);
+	}
+
+	Vec2_& Vec2_::Normalize()
+	{
+		return *this = GetNormalized();
+	}
+
+	Vec2_ GetNormalized() const
+	{
+		const T len = (T)GetLength();
+		if (len != (T)0)
+		{
+			return Vec2_<T>(x * ((T)1 / len), y * ((T)1 / len));
+		}
+		return *this;
+	}
+
 public:
-	int x;
-	int y;
+	T x;
+	T y;
 };
+
+using Vec2 = Vec2_<int>;
+using Vei2 = Vec2_<float>;

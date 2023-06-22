@@ -57,7 +57,7 @@ void Character::Animate(Graphics& gfx)
 void Character::Move(const Vec2& delta)
 {
 	float deltatime = timer.Mark();
-	position += delta.GetNormalized() * speed * deltatime;
+	position += Vei2(delta.GetNormalized()) * speed * deltatime;
 
 	animation_cycle += deltatime;
 	if (animation_cycle > animation_speed) {
