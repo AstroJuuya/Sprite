@@ -3,6 +3,7 @@
 #include "Graphics.h"
 #include "Animation.h"
 #include "FrameTimer.h"
+#include "SpriteEffect.h"
 
 class Character
 {

@@ -26,6 +26,7 @@
 #include "Colors.h"
 #include "Surface.h"
 #include "Rect.h"
+#include <cassert>
 
 class Graphics
 {
@@ -67,18 +68,47 @@ public:
 		DrawRect( x0,y0,x0 + width,y0 + height,c );
 	}
 	void DrawCircle( int x,int y,int radius,Color c );
-	void DrawSpriteNonChroma(const int x, const int y, const Surface& surf);
-	void DrawSpriteNonChroma(const int x, const int y, const RectI& subregion, const Surface& surf);
-	void DrawSpriteNonChroma(const int x, const int y, const RectI clipping_region, RectI subregion, const Surface& surf);
-	void DrawSprite(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta);
-	void DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
-	void DrawSprite(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta);
-	void DrawSpriteSubstitute(const int x, const int y, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
-	void DrawSpriteSubstitute(const int x, const int y, const RectI& subregion, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
-	void DrawSpriteSubstitute(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const Color& chroma = Colors::Magenta, const Color& substitute = Colors::Magenta);
-	void DrawSpriteTransparent(const int x, const int y, const Surface& surf, const unsigned int alpha = 1.0f, const Color& chroma = Colors::Magenta);
-	void DrawSpriteTransparent(const int x, const int y, const RectI& subregion, const Surface& surf, const unsigned int alpha = 1.0f, const Color& chroma = Colors::Magenta);
-	void DrawSpriteTransparent(int x, int y, const RectI& clipping_region, RectI subregion, const Surface& surf, const unsigned int alpha = 1.0f, const Color& chroma = Colors::Magenta);	RectI GetScreenRect() const;
+	template<typename E> void DrawSprite(const int x, const int y, const Surface& surf, E effect)
+	{
+		DrawSprite(x, y, surf.GetRect(), surf, effect);
+	}
+	template<typename E> void DrawSprite(const int x, const int y, const RectI& subregion, const Surface& surf, E effect)
+	{
+		DrawSprite(x, y, GetScreenRect(), subregion, surf, effect);
+	}
+	template<typename E> void DrawSprite(int x, int y, const RectI clipping_region, RectI subregion, const Surface& surf, E effect)
+	{
+		assert(subregion.left >= 0);
+		assert(subregion.right <= surf.GetWidth());
+		assert(subregion.top >= 0);
+		assert(subregion.bottom <= surf.GetHeight());
+
+		if (x < clipping_region.left) {
+			subregion.left += clipping_region.left - x;
+			x += clipping_region.left - x;
+		}
+		if (x + subregion.GetWidth() > clipping_region.right) {
+			subregion.right = subregion.left + clipping_region.right - x;
+		}
+		if (y < clipping_region.top) {
+			subregion.top += clipping_region.top - y;
+			y += clipping_region.top - y;
+		}
+		if (y + subregion.GetHeight() > clipping_region.bottom) {
+			subregion.bottom = subregion.top + clipping_region.bottom - y;
+		}
+		for (int sx = 0; sx < subregion.GetWidth(); sx++) {
+			for (int sy = 0; sy < subregion.GetHeight(); sy++) {
+				effect(
+					surf.GetPixel(subregion.left + sx, subregion.top + sy),
+					x + sx,
+					y + sy,
+					*this
+				);
+			}
+		}
+	}
+	RectI GetScreenRect() const;
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

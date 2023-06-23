@@ -23,25 +23,23 @@ void Character::Animate(Graphics& gfx)
 		sprite_at.y = animation_state;
 	}
 	if (damage_tick) {
-		gfx.DrawSpriteSubstitute(
+		gfx.DrawSprite(
 			(int)position.x,
 			(int)position.y,
 			gfx.GetScreenRect(),
 			animation.GetSpriteRect(sprite_at),
 			animation.spritesheet,
-			animation.chroma,
-			damage_color);
+			SpriteEffect::Substitute{ damage_color, animation.chroma });
 		return;
 	}
 	if (ghostified) {
-		gfx.DrawSpriteTransparent(
+		gfx.DrawSprite(
 			(int)position.x,
 			(int)position.y,
 			gfx.GetScreenRect(),
 			animation.GetSpriteRect(sprite_at),
 			animation.spritesheet,
-			ghostified_alpha,
-			animation.chroma);
+			SpriteEffect::Transparent{ ghostified_alpha, animation.chroma });
 	}
 	else {
 		gfx.DrawSprite(
@@ -50,7 +48,7 @@ void Character::Animate(Graphics& gfx)
 			gfx.GetScreenRect(),
 			animation.GetSpriteRect(sprite_at),
 			animation.spritesheet,
-			animation.chroma);
+			SpriteEffect::Chroma{ animation.chroma });
 	}
 }
 

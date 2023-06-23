@@ -73,7 +73,7 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	gfx.DrawSprite(100, 100, marle_sprite);
+	gfx.DrawSprite(100, 100, marle_sprite, SpriteEffect::Chroma{ Colors::Magenta });
 	message.Draw(gfx, "This is some\nbullshit!11!11!!", 100, 100);
 	link.Animate(gfx);
 }

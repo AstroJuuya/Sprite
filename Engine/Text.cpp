@@ -15,12 +15,12 @@ void Text::Draw(Graphics& gfx, const std::string text, const int pos_x, const in
 			text_coord.x = -1;
 			continue;
 		}
-		gfx.DrawSpriteSubstitute(
+		gfx.DrawSprite(
 			pos_x + fontsheet.spritesize.x * text_coord.x,
 			pos_y + fontsheet.spritesize.y * text_coord.y,
 			GetLetter(text[i]),
 			fontsheet.spritesheet,
-			fontsheet.chroma, text_color);
+			SpriteEffect::Substitute { text_color, fontsheet.chroma });
 	}
 }
 

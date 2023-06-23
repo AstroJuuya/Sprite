@@ -3,6 +3,7 @@
 #include <string>
 #include "Animation.h"
 #include "Graphics.h"
+#include "SpriteEffect.h"
 
 class Text
 {

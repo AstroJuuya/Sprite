@@ -26,6 +26,7 @@
 #include "Surface.h"
 #include "Character.h"
 #include "Text.h"
+#include "SpriteEffect.h"
 
 class Game
 {
