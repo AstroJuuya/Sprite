@@ -4,6 +4,7 @@
 #include "ChiliWin.h"
 #include "Rect.h"
 #include <string>
+#include <memory>
 
 class Surface {
 public:
@@ -13,7 +14,7 @@ public:
 	Surface(const int in_width, const int in_height);
 	Surface(const int in_width, const int in_height, Color& col);
 	Surface& operator=(const Surface& rhs);
-	~Surface();
+	~Surface() = default;
 
 	void PutPixel(const int x, const int y, const Color& c);
 	Color GetPixel(const int x, const int y) const;
@@ -25,5 +26,5 @@ public:
 private:
 	int width = 0;
 	int height = 0;
-	Color* pPixels = nullptr;
+	std::unique_ptr<Color[]> pPixels;
 };
