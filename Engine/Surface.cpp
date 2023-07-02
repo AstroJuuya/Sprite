@@ -23,7 +23,7 @@ Surface::Surface(std::string filename)
 	assert(bmInfoHeader.biCompression == BI_RGB);
 
 	int heightStart = height - 1;
-	int heightEnd = 0;
+		int heightEnd = -1;
 	int fdir = -1;
 	if (bmInfoHeader.biHeight < 0) {
 		heightStart = 0;

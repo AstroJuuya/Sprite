@@ -37,6 +37,6 @@ RectI Animation::GetSpriteRect(const Vec2& at) const
 	return RectI(
 		spritesize.x * at.x,
 		spritesize.x * at.x + spritesize.x,
-		spritesize.y * at.y + 1,
+		spritesize.y * at.y,
 		spritesize.y * at.y + spritesize.y);
 }
